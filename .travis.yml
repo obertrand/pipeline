@@ -1,11 +1,23 @@
 sudo: required
 language: node_js
 node_js:
-  - "4.1"
+  - '4.1'
 services:
   - docker
+env:
+  global:
+  - COMMIT=${TRAVIS_COMMIT::8}
+  - secure: H10gujBeFKvsQXGGC+amtgzeFVd6qLtIM2Km+zaD1wXY80t/5CPpKSpBx7PtVxdqK+8lOlSmrqSALs4w4kOX+WcQepKgAGyIJ9z86IpNFYJ4PcLFCXPxnfkeuAUvhqIO7H1I1McZzAFOk2NDtLEzU2mbYm594lhvkAanZRdJFK2pmeKCRxGt3E1Wlmpe1UdAsZVbnkvJi5y8q5uAriOlE64rfJUi2fLqJNlXBYTg4mlQi0LEVf/KOTajG7jtlpBxjfryAErWI5CxyljbPJd2OdQsa0Qic6hLyv7cS7AT7KON4sS/xEJLEIHcYIi7FTkRdNUg9D5y66C0Ay+IdPtHwHd/kcOLl1S7Z6ApgjDNiZvM6sj4usg1PDGSgO0rIGOdVmUbxmbW/jVb5GhRde9XjGqLeMfQHupLSt0XKwRyJ5BmGelTS46paAGmltYzTaGVwmli13iFkiRy65dc8xrCX7tnROwAvvFieaQGypnL6hHVF9qwd7PW8gXXY22oidH196XPdGU/k3OZ8tBkWPnCfix7f4dcasUD+redLmv0SCR4Q6EwiGX+0EiTuyyJspnu9ju802HOrGfx17ZC0IdX9cYFnG/WdWotkC0WSFEn08/fIWCy3JqWJsERoHE48yXNfnFHUXugzyHXfy9AMr0ea3PUZRNogmqZK/OpnR+YJDY=
+  - secure: Kps2uk//BlZCAeQiVBo6PhbAtbQtOMZKwoEZOPK6x6aBq5d1lX29GuPaa+g+/Ax1kPXCX8m+2oYsblnpgUXFeiIwCx9DCZKoiC7FsZZU4tajbUHOLRn7v2iL3jOnKa1bdaRIFcptam8LAfIidYKZ/kxPWQZB+V3l4W2IFp20MuKw4VpKGZqabBu0PqwvMPqvwWt6sdJSn8FRxnHUI76Y5Mbg9VulROq0Mu/787Gc6sCmUeMyLgEPQLqH7uCQiLp3lwVd3awWkKimKtAvtGMXIEmceNNGObsPZnWayQkVRNawTcYLakIHJJKj09R9JuaGc523T9LsD2jWNLxPxRKlAmfbL6OY9pZK97qMUQyjCZZLIwoPCr3v72bH7Tun6O0sMRnnzZHEIzOGdamX/2s7VV4kUi1qa2B0KTY5Bk6WV1XZrjgPR8BY7SwwEmZHIg5amkQSZ8ybN5PbdQN930Neysqw/Cf867l7x0B9XvgDnZRzVfiGvcB+822DXZ5ukgrr/Boq7BCA8IaIzEr7iw18bb1G1obYywbCaGYYM6tOWqTOvOpkahEz5+azszwsExXI/fWftH2VI16nlcfOz45BKjKrKYArqpozsgABFXWwCZwak7MugGp9rvWsolXyD47xJUHy9e50ToBKoQjJla1BAL89b9UU9QdkJED/cYpquZU=
+  - secure: IfREg1k+YNEkLYgMNeSC4M0OIhkC+KsTf+Qb4r8O9HTdZqET2iu7yp+KppycvAvlcvkUtgMUr4P7Uym0jraGqijTsr4SEvfPXA6x+2cbLJD8OIXIAzR+cILmmF589POc8NwSrm9c7IKCUvaomG0DyxnTFOFxhdmcArbS//qqXiF4wTlytHvoXK76eYSu8apKlJvzOT1LZu7S2USWN3DsbykEJN0U2j9MZE95DUqGtajYuzzq0migIEsNACmCA9rfyuqDrtTHzoAHlk4E9c+48l8sgYz054uTP6pXj15y7iAUfhZ3wC2smJ6HAHbmGCoaOdno2w60bTZ12flS5Lbl4b/7NZYUegRLUFxAMG/ljoARO595qyBlkJC9yXXvkpIbn7Ew1/jNAeRKwUsZ4PKl9w4tA1IHeH12sPIr7LnQpWhxt5PfgpyLnb+0OMmXztHGKe9kYHL+i3yhkYOBi4ISs95f5zWrgpxPO9xb1KJmTr3b+b6KcVmh9BTiSl/cAxKRzhPJl5Kq/O3bK6WocZqEqeUhp1Om0EwzDsuba5gbFEjZTKCDzPvJd87PtXuF8u65LeaCvQkQTte2jTy/z24bUADD1d9S7HalJE+m14gMAEve1Tz3cZcPglwmFRqmOFWqvfhQOVJUsmZGfsJ8qs3OcbIxkeGQ/PfEAtTiTKD0Ego=
 before_install:
-  - docker build -t pipeline --rm=true .
+  - export REPO=bertrandxyz/pipeline
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
   - docker-compose up -d
 script: gulp
-
+after_success:
+  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO

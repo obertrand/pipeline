@@ -1,6 +1,6 @@
 pipeline:
   container_name: pipeline
-  image: pipeline
+  image: bertrandxyz/pipeline
   restart: always
   ports:
     - "80:80"
