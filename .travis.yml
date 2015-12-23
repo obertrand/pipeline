@@ -1,7 +1,7 @@
 sudo: required
-language: node_js
-node_js:
-- '4.1'
+language: php
+php:
+- 5.6
 services:
 - docker
 env:
@@ -11,6 +11,7 @@ env:
   - secure: MrcZpRbEPujvEBViUFxt1/N4Rso4jTwEnrQn4ZO3UiHrmAzUO2ObiybqfXSc5+kb6keDUshkoiYGuJEk+6pMQrlSFALchfyF49E4w+J9+bTCcXmGMjJDKmJU1p6D1qumUN97t29tkZ6z7A8p8W23wOINRCRSkHBa+Bcj7fN66KezPfGsGSCCBbt3lSAHlVI+U9NN6XIEyQ0tujeAbs53Zbh7px65TQxUwGlL3lCF7pD314zOMdyQKJkre+SFf86qQ8gJPsFaWReVzo8g0NcRKchr2VDhadwBGgKrDQGrumVJa6VgeJEFoncpGxTON61J4TiZz7YuYgP+FLae3yxOcZmX31hZWsOIPsQZ2jK3q2F9zp9b6j2Ac/uac1ivENIvMpftc0QVOMkQqNWl+qWQJO0J4Hy03pZm9lU3NqiEWVMjCq2TWm678pcMoundrgMVQ/fNcHY4qGJWzYKS+JoQ/RBQcQ/4LXnzbBE8Wbgs7Z7h5SuPYQEseulBtjewvkryr5CGE5V3P3vK3uuOOelVdRZUid8NHqyadknpk4puvyTV/vMtPy6V6BKWi5BULmAdXsWcGYH42a2tuSVWNsicdLhYxobrWzaIpICFWDRYVfdWdR3wKjO6LSf5BDIfIMmj20u9jGjsW69UgzfLJmWMd/3LXHll33YNncrUfiCQN6w=
 before_install:
 - composer install
+- npm install
 - export REPO=bertrandxyz/pipeline
 - docker build -f Dockerfile -t $REPO .
 - docker-compose up -d
