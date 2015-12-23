@@ -7,5 +7,6 @@ RUN a2enmod rewrite \
     && docker-php-ext-install mysqli
 
 COPY . /var/www/html
+COPY vendor /var/www/html/vendor
 COPY ./vhost /etc/apache2/sites-enabled/
 EXPOSE 80
