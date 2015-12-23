@@ -10,6 +10,5 @@ before_install:
   - docker-compose up -d
   - npm install
 
-script:
-  - gulp
+script: gulp
 

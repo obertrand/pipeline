@@ -15,7 +15,6 @@ db-pipeline:
         - "3306:3306"
     volumes:
         - /var/lib/mysql
-        - ./database/sql:/docker-entrypoint-initdb.d
     environment:
         - MYSQL_ALLOW_EMPTY_PASSWORD=yes
         - MYSQL_DATABASE=pipeline

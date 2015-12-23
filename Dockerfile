@@ -6,6 +6,6 @@ RUN a2enmod rewrite \
     && docker-php-ext-install mbstring \
     && docker-php-ext-install mysqli
 
-COPY . /var/www/html/
-COPY ./server.conf /etc/apache2/sites-enabled
+COPY . /var/www/html
+COPY ./vhost /etc/apache2/sites-enabled/
 EXPOSE 80
