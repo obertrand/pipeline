@@ -8,3 +8,8 @@ services:
 before_install:
   - docker build -t pipeline --rm=true .
   - docker-compose up -d
+  - npm install
+
+script:
+  - gulp
+
